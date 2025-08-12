@@ -15,240 +15,102 @@
       /* design tokens */
       --bg: #0b0b10;
       --paper: #0f1016;
-      --ink: #e7e9ee;
+      --ink: #f1f3f7;
       --muted: #a7acb9;
-      --accent: #7dd3fc; /* soft cyan */
-      --accent-2: #c084fc; /* soft violet */
-      --radius: 16px;
+      --accent: #ffffff;
+      --radius: 28px;
       --space: clamp(14px, 1.2vw + 10px, 22px);
-      --max: 1120px;
+      --max: 1280px;
+      --hero-h: min(76vh, 720px);
     }
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 10% -10%, #12131b 0%, #0b0b10 60%) fixed;
-      color:var(--ink); line-height:1.55; letter-spacing:0.2px;
-    }
+    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; background:#0b0b10; color:var(--ink)}
     a{color:inherit; text-decoration:none}
     img{max-width:100%; display:block}
-    .wrap{max-width:var(--max); margin-inline:auto; padding-inline:calc(var(--space)*1.2)}
-    /* header */
-    header{position:sticky; top:0; z-index:10; backdrop-filter:saturate(120%) blur(8px)}
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: calc(var(--space)*0.9) 0;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-      background:linear-gradient(180deg, rgba(15,16,22,0.9), rgba(15,16,22,0.6));
+    .wrap{max-width:var(--max); margin-inline:auto; padding-inline: clamp(12px, 3vw, 24px)}
+
+    /* ==== COVER CARD ==== */
+    .cover-shell{padding: clamp(16px, 4vw, 48px) 0 56px}
+    .cover{position:relative; height: var(--hero-h); border-radius: var(--radius); overflow:hidden; box-shadow: 0 30px 80px rgba(0,0,0,.45); background:#0d0f15}
+    .cover img.bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter: saturate(105%) contrast(102%)}
+    .cover::after{ /* subtle bottom vignette */
+      content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.55) 92%);
+      pointer-events:none;
     }
-    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.6px}
-    .brand .logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 24px rgba(125,211,252,0.25)}
-    .nav a.link{opacity:0.9; margin-left:18px}
-    .cta{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px; background:linear-gradient(135deg, rgba(125,211,252,0.12), rgba(192,132,252,0.12)); border:1px solid rgba(125,211,252,0.28); transition:transform .15s ease}
+    .brand{position:absolute; top:24px; left:28px; font-weight:700; letter-spacing:.4px; mix-blend:normal}
+    .cta{position:absolute; top:20px; right:20px; padding:10px 16px; border-radius:999px; background:#0c0d10; color:#fff; border:1px solid rgba(255,255,255,.2); font-weight:600}
     .cta:hover{transform:translateY(-1px)}
-    /* hero */
-    .hero{padding: clamp(42px, 7vw, 96px) 0}
-    .grid{display:grid; gap: clamp(16px,2.2vw,28px)}
-    .hero .grid{grid-template-columns: 1.2fr .8fr}
-    @media (max-width: 900px){ .hero .grid{grid-template-columns: 1fr} }
-    .title{font-size: clamp(34px, 4.4vw, 64px); line-height:1.05; font-weight:800; letter-spacing:0.2px; margin:0 0 10px}
-    .subtitle{font-size: clamp(16px, 1.4vw, 20px); color:var(--muted); max-width: 58ch}
-    .chipbar{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
-    .chip{padding:8px 12px; border-radius:999px; background:#12131b; border:1px solid rgba(255,255,255,0.08); font-size:14px; color:var(--muted)}
-    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); padding: clamp(16px, 1.8vw, 22px)}
-    .panel + .panel{margin-top: clamp(12px,1.2vw,16px)}
-    .thumb{aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#10121a; border:1px solid rgba(255,255,255,0.06)}
-    /* section */
-    section{padding: clamp(24px, 5vw, 64px) 0}
-    .kicker{font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase}
-    .h2{font-size: clamp(22px, 2.6vw, 34px); line-height:1.15; margin:6px 0 8px; font-weight:800}
-    .lead{color:var(--muted); max-width: 70ch}
-    /* cards */
-    .cards{display:grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 1.8vw, 22px); margin-top: clamp(18px, 2.2vw, 26px)}
-    .card{grid-column: span 4; background:var(--paper); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius); overflow:hidden; transition:transform .16s ease, box-shadow .16s ease}
-    .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,0.35)}
-    .card .body{padding:18px}
-    .eyebrow{font-size:12px; color:var(--muted); letter-spacing:0.4px; margin-bottom:6px}
-    .card h3{margin:4px 0 8px; font-size:18px}
-    .meta{font-size:13px; color:var(--muted)}
-    @media (max-width: 1000px){ .card{grid-column: span 6} }
-    @media (max-width: 640px){ .card{grid-column: span 12} }
-    /* newsletter */
-    .nl{display:flex; gap:10px; margin-top:16px}
-    .nl input{flex:1; padding:12px 14px; background:#0d0e14; border:1px solid rgba(255,255,255,0.12); color:var(--ink); border-radius:10px}
-    .nl button{padding:12px 16px; border-radius:10px; border:1px solid rgba(125,211,252,0.4); background:linear-gradient(135deg, rgba(125,211,252,0.18), rgba(192,132,252,0.18)); color:var(--ink); font-weight:600}
-    /* footer */
-    footer{padding: 32px 0 48px; color:var(--muted)}
-    .foot{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); margin-top: 32px; padding-top: 18px}
-    .social{display:flex; gap:14px}
-    .tag{padding:6px 10px; border-radius:999px; border:1px dashed rgba(255,255,255,0.2); color:var(--muted); font-size:12px}
-    /* utils */
-    .fade{opacity:0.92}
-    .muted{color:var(--muted)}
+
+    .title{position:absolute; inset:0; display:grid; place-items:center; text-align:center; font-size: clamp(40px, 7.8vw, 96px); line-height:1; font-weight:800; letter-spacing:.2px; text-shadow: 0 2px 24px rgba(0,0,0,.45)}
+
+    .bottom-bar{position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:space-between; padding: 20px 28px; color: rgba(255,255,255,.92);}
+    .count{font-weight:800; font-size: clamp(16px, 2.2vw, 24px)}
+    .count small{opacity:.65; font-weight:600; margin-left:6px}
+    .social{display:flex; gap:18px; font-weight:600; opacity:.9}
+
+    /* ====== BELOW THE FOLD (optional sections kept minimal) ====== */
+    section{padding: clamp(28px, 5vw, 64px) 0; color:var(--muted)}
+    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 24px)}
+    .card{grid-column: span 4; background:var(--paper); border:1px solid rgba(255,255,255,0.06); border-radius:16px; overflow:hidden}
+    @media (max-width: 900px){ .card{grid-column: span 6} }
+    @media (max-width: 620px){ .card{grid-column: span 12} }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="#top" aria-label="Scribblemouth home">
-        <span class="logo" aria-hidden="true"></span>
-        <span>SCRIBBLEMOUTH</span>
-      </a>
-      <nav>
-        <a class="link" href="#videos">Videos</a>
-        <a class="link" href="#about">About</a>
-        <a class="link" href="#newsletter">Newsletter</a>
-        <a class="link cta" href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero wrap">
-      <div class="grid">
-        <div>
-          <h1 class="title">Curiosity without the cringe.</h1>
-          <p class="subtitle">Science and philosophy, explained simply—without killing the magic. Longer dives are coming; start here with the greatest hits.</p>
-          <div class="chipbar" role="list" aria-label="Topics">
-            <span class="chip">Cosmology</span>
-            <span class="chip">Consciousness</span>
-            <span class="chip">Origins of life</span>
-            <span class="chip">Paradox</span>
-          </div>
+  <main>
+    <div class="wrap cover-shell">
+      <section class="cover" aria-label="Feature">
+        <img class="bg" src="/hero.jpg" alt="Background scene" />
+        <div class="brand">Scribblemouth.</div>
+        <a class="cta" href="#newsletter">Sign up</a>
+        <h1 class="title">Nature.</h1>
+        <div class="bottom-bar">
+          <div class="count">04 <small>/09</small></div>
+          <nav class="social">
+            <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram.</a>
+            <a href="https://facebook.com/" target="_blank" rel="noopener">Facebook.</a>
+            <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble.</a>
+            <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter.</a>
+          </nav>
         </div>
-        <aside>
-          <div class="panel">
-            <div class="thumb">
-              <!-- Drop a hero image at /public/hero.jpg (or replace src below) -->
-              <img src="/hero.jpg" alt="Scribblemouth montage placeholder" />
-            </div>
-            <p class="muted fade" style="margin:10px 0 0">Replace <code>/hero.jpg</code> with your image.
-            </p>
-          </div>
-          <div class="panel" id="newsletter">
-            <div class="kicker">Newsletter</div>
-            <div class="h2">One thought worth your time.</div>
-            <p class="lead">Get a short, dense idea each week. No fluff.</p>
-            <form class="nl" action="#" method="post" onsubmit="subscribe(event)">
-              <label class="visually-hidden" for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="you@domain.com" required />
-              <button type="submit">Subscribe</button>
-            </form>
-            <div id="nl-status" class="muted" style="margin-top:8px"></div>
-          </div>
-        </aside>
-      </div>
+      </section>
+    </div>
+
+    <!-- Minimal below-the-fold so you still have content -->
+    <section id="newsletter" class="wrap">
+      <h2 style="margin:0 0 8px; color:var(--ink)">One thought worth your time.</h2>
+      <p style="margin:0 0 14px">Get a short, dense idea each week. No fluff.</p>
+      <form onsubmit="subscribe(event)" style="display:flex; gap:10px; max-width:560px">
+        <input id="email" name="email" type="email" placeholder="you@domain.com" required style="flex:1; padding:12px 14px; background:#0d0e14; border:1px solid rgba(255,255,255,0.12); color:var(--ink); border-radius:10px" />
+        <button type="submit" style="padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.25); background:#141722; color:#fff; font-weight:700">Subscribe</button>
+      </form>
+      <div id="nl-status" style="margin-top:8px"></div>
     </section>
 
-    <!-- FEATURED VIDEOS -->
-    <section id="videos" class="wrap">
-      <div class="kicker">Watch</div>
-      <h2 class="h2">Recent videos</h2>
-      <p class="lead">Swap the thumbnails/links with your latest reels and YouTube posts.</p>
-      <div class="cards">
-        <!-- Card 1 -->
-        <a class="card" href="https://www.youtube.com/@" target="_blank" rel="noopener">
-          <img src="/thumbs/vid1.jpg" alt="Video 1 thumbnail" class="thumb" />
-          <div class="body">
-            <div class="eyebrow">Cosmology</div>
-            <h3>The universe isn't big—you're small</h3>
-            <div class="meta">4 min · YouTube</div>
-          </div>
+    <section class="wrap" aria-label="Recent">
+      <div class="grid">
+        <a class="card" href="#">
+          <img src="/thumbs/vid1.jpg" alt="thumb" />
         </a>
-        <!-- Card 2 -->
-        <a class="card" href="https://www.instagram.com/" target="_blank" rel="noopener">
-          <img src="/thumbs/vid2.jpg" alt="Video 2 thumbnail" class="thumb" />
-          <div class="body">
-            <div class="eyebrow">Consciousness</div>
-            <h3>Why your brain invents reality</h3>
-            <div class="meta">90 sec · Instagram</div>
-          </div>
+        <a class="card" href="#">
+          <img src="/thumbs/vid2.jpg" alt="thumb" />
         </a>
-        <!-- Card 3 -->
-        <a class="card" href="https://www.tiktok.com/" target="_blank" rel="noopener">
-          <img src="/thumbs/vid3.jpg" alt="Video 3 thumbnail" class="thumb" />
-          <div class="body">
-            <div class="eyebrow">Origins</div>
-            <h3>Life’s first spark</h3>
-            <div class="meta">60 sec · TikTok</div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="wrap">
-      <div class="kicker">About</div>
-      <h2 class="h2">Scribblemouth</h2>
-      <p class="lead">I make short, sharp videos about science and philosophy. 140k on Instagram, 70k on TikTok—and now building deeper, longer dives here without losing the spark.</p>
-    </section>
-
-    <!-- CONTACT / LINKS -->
-    <section id="contact" class="wrap">
-      <div class="kicker">Contact</div>
-      <h2 class="h2">Bookings & collabs</h2>
-      <div class="cards">
-        <a class="card" href="mailto:hello@yoursite.com">
-          <div class="body">
-            <div class="eyebrow">Email</div>
-            <h3>hello@yoursite.com</h3>
-            <div class="meta">Speaking, partnerships, media</div>
-          </div>
-        </a>
-        <a class="card" href="https://instagram.com/" target="_blank" rel="noopener">
-          <div class="body">
-            <div class="eyebrow">Instagram</div>
-            <h3>@scribblemouth</h3>
-            <div class="meta">Shorts, behind-the-scenes</div>
-          </div>
-        </a>
-        <a class="card" href="https://youtube.com/" target="_blank" rel="noopener">
-          <div class="body">
-            <div class="eyebrow">YouTube</div>
-            <h3>Deeper dives</h3>
-            <div class="meta">Long-form videos</div>
-          </div>
+        <a class="card" href="#">
+          <img src="/thumbs/vid3.jpg" alt="thumb" />
         </a>
       </div>
     </section>
   </main>
 
-  <footer class="wrap">
-    <div class="foot">
-      <div class="brand">
-        <span class="logo" aria-hidden="true"></span>
-        <span>SCRIBBLEMOUTH</span>
-      </div>
-      <div class="social">
-        <span class="tag">© <span id="year"></span> Scribblemouth</span>
-        <a class="tag" href="/privacy">Privacy</a>
-        <a class="tag" href="/terms">Terms</a>
-      </div>
-    </div>
-  </footer>
-
   <script>
-    // Simple behaviours (no frameworks)
-    document.getElementById('year').textContent = new Date().getFullYear();
-
     function subscribe(e){
       e.preventDefault();
       const out = document.getElementById('nl-status');
       const email = document.getElementById('email').value;
-      // Replace with your form endpoint (Buttondown, ConvertKit, Mailchimp, Vercel serverless function etc.)
       out.textContent = `Thanks! If ${email} is valid, you'll get a confirmation soon.`;
       e.target.reset();
     }
-
-    // optional: smooth scroll for in-page links
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
-      })
-    })
   </script>
 </body>
 </html>
