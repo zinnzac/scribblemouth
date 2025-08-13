@@ -25,26 +25,22 @@
       position:relative; width:min(1100px,100%); aspect-ratio:16/9; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.25);
       background:#111;
     }
-    .bg {
-    position: absolute;
-    inset: 0;
-    background: #222 center/cover no-repeat;
-    transform: translateX(0);
-    transition: transform 1s ease-in-out;
-  }
-  .bg.slide-out {
-    transform: translateX(-100%);
-  }
-  .bg-next {
-    position: absolute;
-    inset: 0;
-    background: #222 center/cover no-repeat;
-    transform: translateX(100%);
-    transition: transform 1s ease-in-out;
-  }
-  .bg-next.slide-in {
-    transform: translateX(0);
-  }
+    .bg, .bg-next {
+  position: absolute;
+  inset: 0;
+  background: #222 center/cover no-repeat;
+  transform: translateX(0);
+  transition: transform 1s ease-in-out;
+}
+.bg-next {
+  transform: translateX(100%);
+}
+.slide-left {
+  transform: translateX(-100%);
+}
+.slide-in {
+  transform: translateX(0);
+}
     /* soft light rays tint */
     .tint{ position:absolute; inset:0; background:radial-gradient(100% 140% at 70% 0%, rgba(255,245,200,.22) 0%, rgba(0,0,0,0) 55%),
                                    linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.75) 100%); }
@@ -80,7 +76,8 @@
 <body>
   <main class="card" role="main" aria-label="Hero">
     <div class="bg" aria-hidden="true"></div>
-    <div class="bg" aria-hidden="true"></div>
+<div class="bg-next" aria-hidden="true"></div>
+
 <div class="bg-next" aria-hidden="true"></div>
 
     <div class="inner">
@@ -105,39 +102,48 @@
     </div>
   </main>
 <script>
-  const images = [
-    'hero1.jpg',
-    'hero2.jpg',
-    'hero3.jpg'
-  ]; // put your image filenames here, in same folder as index.html
+const images = [
+  'hero1.jpg',
+  'hero2.jpg',
+  'hero3.jpg'
+]; // adjust file names
 
-  let current = 0;
-  const bg = document.querySelector('.bg');
-  const bgNext = document.querySelector('.bg-next');
+// preload images
+images.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
 
-  bg.style.backgroundImage = `url(${images[current]})`;
+let current = 0;
+const bg = document.querySelector('.bg');
+const bgNext = document.querySelector('.bg-next');
 
-  setInterval(() => {
-    // next index
-    const next = (current + 1) % images.length;
-    bgNext.style.backgroundImage = `url(${images[next]})`;
+bg.style.backgroundImage = `url(${images[current]})`;
 
-    // trigger animations
-    bg.classList.add('slide-out');
-    bgNext.classList.add('slide-in');
+setInterval(() => {
+  const next = (current + 1) % images.length;
+  bgNext.style.backgroundImage = `url(${images[next]})`;
 
-    // after animation finishes, swap elements
-    setTimeout(() => {
-      bg.classList.remove('slide-out');
-      bgNext.classList.remove('slide-in');
+  // animate: move current out, next in
+  bg.classList.add('slide-left');
+  bgNext.classList.add('slide-in');
 
-      // swap references
-      bg.style.backgroundImage = `url(${images[next]})`;
-      bgNext.style.backgroundImage = '';
-      current = next;
-    }, 1000); // matches transition duration
-  }, 5000); // 5 seconds per image
+  // after animation, swap roles
+  setTimeout(() => {
+    bg.className = 'bg'; // reset classes
+    bgNext.className = 'bg-next'; // reset classes
+
+    // swap references so bg always holds current
+    const temp = bg.style.backgroundImage;
+    bg.style.backgroundImage = bgNext.style.backgroundImage;
+    bgNext.style.backgroundImage = temp;
+
+    current = next;
+  }, 1000); // matches CSS transition time
+
+}, 5000); // change every 5s
 </script>
+
 
 </body>
 </html>
