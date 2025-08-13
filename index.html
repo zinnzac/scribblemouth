@@ -59,6 +59,49 @@
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
     
     .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
+    /* Chromatic aberration utility */
+.chroma {
+  position: relative;
+  /* override the headline’s difference blend so colors look right */
+  mix-blend-mode: normal;
+  --ca-offset: 1.5px;   /* horizontal split strength */
+  --ca-blur: 0.4px;     /* soften colored layers */
+  --ca-alpha: 0.85;     /* layer opacity */
+}
+
+.chroma::before,
+.chroma::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* put the color layers above the base text */
+  z-index: 0;
+}
+
+.chroma::before {
+  color: #00e5ff;                    /* cyan */
+  transform: translate(calc(-1 * var(--ca-offset)), 0);
+  filter: blur(var(--ca-blur));
+  opacity: var(--ca-alpha);
+  mix-blend-mode: screen;
+}
+.chroma::after {
+  color: #ff2fd2;                    /* magenta */
+  transform: translate(var(--ca-offset), 0);
+  filter: blur(var(--ca-blur));
+  opacity: var(--ca-alpha);
+  mix-blend-mode: screen;
+}
+
+/* optional: stronger on hover */
+.chroma:hover { --ca-offset: 2.5px; }
+
+/* motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .chroma::before, .chroma::after { transform: none; filter: none; }
+}
+
 
     .bottom{ display:flex; align-items:end; justify-content:space-between; }
     .counter{ font-weight:800; letter-spacing:.5px; font-size:clamp(22px, 3.2vw, 36px); text-shadow:0 2px 14px rgba(0,0,0,.4); }
@@ -82,12 +125,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Edit these to match the files you actually have
   const images = [
-    'public/space/hero1.jpg',
     'public/space/hero3.jpg',
-    'public/space/hero5.jpg',
     'public/nature/hero1.jpg',
+    'public/space/hero5.jpg',
     'public/nature/hero4.jpg',
     'public/personal/hero1.jpg',
+    'public/nature/hero5.jpg',
   ];
 
   const bg = document.querySelector('.bg');
@@ -138,11 +181,12 @@ document.addEventListener('scroll', () => {
       </header>
 
       <section class="center" aria-live="polite">
-        <h1 class="headline">curious.</h1>
+        <h1 class="headline chroma" data-text="curious.">curious.</h1>
+
       </section>
 
       <footer class="bottom">
-        <div class="counter">04 <small>/09</small></div>
+        <div class="counter">01 <small>/04</small></div>
         <nav class="links" aria-label="social">
           <a href="about.html">About Me</a>
           <a href="https://instagram.com/scribblemouth_" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -153,18 +197,19 @@ document.addEventListener('scroll', () => {
     </div>
   </main>
   <section class="card" role="region" aria-label="About ScribbleMouth">
-  <div class="bg" style="background-image:url('public/space/hero4.jpg')" aria-hidden="true"></div>
+  <div class="bg" style="background-image:url('public/personal/hero2.jpg')" aria-hidden="true"></div>
   <div class="tint" aria-hidden="true"></div>
   <div class="inner">
     <header class="top">
-      <div class="brand">ScribbleMouth</div>
+      <div class="brand chroma" data-text="ScribbleMouth">ScribbleMouth</div>
+
       <button class="cta" onclick="location.href='about.html'">Learn more</button>
     </header>
 
     <section class="center" aria-live="polite">
       <div style="max-width:min(760px, 90%); text-align:center;">
         <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
-          Ideas that outgrow the scroll.
+          About me.
         </h2>
         <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
           Longer dives into science and philosophy—clean visuals, clear thinking,
@@ -174,7 +219,7 @@ document.addEventListener('scroll', () => {
     </section>
 
     <footer class="bottom">
-      <div class="counter">05 <small>/09</small></div>
+      <div class="counter">02 <small>/04</small></div>
       <nav class="links" aria-label="more">
         <a href="about.html">About</a>
         <a href="mailto:hello@scribblemouth.com">Contact</a>
@@ -204,7 +249,7 @@ document.addEventListener('scroll', () => {
     </section>
 
     <footer class="bottom">
-      <div class="counter">06 <small>/09</small></div>
+      <div class="counter">03 <small>/04</small></div>
       <nav class="links" aria-label="more">
         <a href="about.html">About</a>
         <a href="mailto:hello@scribblemouth.com">Email</a>
@@ -234,7 +279,7 @@ document.addEventListener('scroll', () => {
     </section>
 
     <footer class="bottom">
-      <div class="counter">07 <small>/09</small></div>
+      <div class="counter">04 <small>/04</small></div>
       <nav class="links" aria-label="more">
         <a href="about.html">About</a>
         <a href="mailto:hello@scribblemouth.com">Email</a>
