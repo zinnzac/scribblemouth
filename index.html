@@ -16,15 +16,29 @@
       --pill-hover:#141414;
     }
     *{box-sizing:border-box}
+    html {
+  scroll-behavior: smooth; /* smooth wheel/touch scrolling */
+}
     html,body{height:100%}
     body{
-      margin:0; background:#e9e9e7; font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
-      display:grid; place-items:center; padding:24px;
-    }
+  margin:0;
+  background:#e9e9e7;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+  min-height:100%;
+  padding:24px;
+}
     .card{
       position:relative; width:min(1100px,100%); aspect-ratio:16/9; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.25);
-      background:#111;
+      background:#111; margin:80px auto; transform: translateY(0) scale(1);
+  opacity: 1;
+  transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+  will-change: transform, opacity;
     }
+    .card.is-outside {
+  transform: translateY(60px) scale(0.96);
+  opacity: 0.6;
+}
     .bg{ position:absolute; inset:0; background: #222 center/cover no-repeat; transform:scale(1.02); opacity: 1; transition: opacity 0.8s ease-in-out; }
     /* soft light rays tint */
     .bg.is-fading{ opacity:0; }
@@ -54,6 +68,7 @@
     .links a{ color:inherit; text-decoration:none; position:relative; }
     .links a::after{ content:""; position:absolute; left:0; right:0; bottom:-4px; height:1px; background:currentColor; opacity:0; transform:scaleX(.6); transition:opacity .2s ease, transform .2s ease; }
     .links a:hover::after{ opacity:1; transform:scaleX(1); }
+    .section-title{ margin: 0 0 10px 0; }
 
     /* small screens */
     @media (max-width: 520px){
@@ -97,6 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Change every 5 seconds
   setInterval(swap, 5000);
 });
+document.addEventListener('scroll', () => {
+  const cards = document.querySelectorAll('.card');
+  const triggerPoint = window.innerHeight * 0.85; // adjust for earlier/later reveal
+
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    if (rect.top < triggerPoint && rect.bottom > 0) {
+      card.classList.remove('is-outside');
+    } else {
+      card.classList.add('is-outside');
+    }
+  });
+});
 </script>
 
 <body>
@@ -124,5 +152,97 @@ document.addEventListener('DOMContentLoaded', () => {
       </footer>
     </div>
   </main>
+  <section class="card" role="region" aria-label="About ScribbleMouth">
+  <div class="bg" style="background-image:url('public/space/hero4.jpg')" aria-hidden="true"></div>
+  <div class="tint" aria-hidden="true"></div>
+  <div class="inner">
+    <header class="top">
+      <div class="brand">ScribbleMouth</div>
+      <button class="cta" onclick="location.href='about.html'">Learn more</button>
+    </header>
+
+    <section class="center" aria-live="polite">
+      <div style="max-width:min(760px, 90%); text-align:center;">
+        <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
+          Ideas that outgrow the scroll.
+        </h2>
+        <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
+          Longer dives into science and philosophy—clean visuals, clear thinking,
+          and the weird questions you actually care about.
+        </p>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="counter">05 <small>/09</small></div>
+      <nav class="links" aria-label="more">
+        <a href="about.html">About</a>
+        <a href="mailto:hello@scribblemouth.com">Contact</a>
+      </nav>
+    </footer>
+  </div>
+</section>
+<section class="card" role="region" aria-label="Third Section">
+  <div class="bg" style="background-image:url('public/space/hero3.jpg')" aria-hidden="true"></div>
+  <div class="tint" aria-hidden="true"></div>
+  <div class="inner">
+    <header class="top">
+      <div class="brand">ScribbleMouth</div>
+      <button class="cta" onclick="location.href='contact.html'">Contact</button>
+    </header>
+
+    <section class="center" aria-live="polite">
+      <div style="max-width:min(760px, 90%); text-align:center;">
+        <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
+          Questions worth chasing.
+        </h2>
+        <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
+          Where curiosity meets research, and ideas are tested against reality.
+          The universe doesn’t hand out answers freely — but it leaves clues.
+        </p>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="counter">06 <small>/09</small></div>
+      <nav class="links" aria-label="more">
+        <a href="about.html">About</a>
+        <a href="mailto:hello@scribblemouth.com">Email</a>
+      </nav>
+    </footer>
+  </div>
+</section>
+<section class="card" role="region" aria-label="Fourth Section">
+  <div class="bg" style="background-image:url('public/space/hero2.jpg')" aria-hidden="true"></div>
+  <div class="tint" aria-hidden="true"></div>
+  <div class="inner">
+    <header class="top">
+      <div class="brand">ScribbleMouth</div>
+      <button class="cta" onclick="location.href='about.html#longform'">Long-form</button>
+    </header>
+
+    <section class="center" aria-live="polite">
+      <div style="max-width:min(760px, 90%); text-align:center;">
+        <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
+          Slow down to think deeply.
+        </h2>
+        <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
+          Essays and videos designed for attention, not algorithm drift.
+          If it matters, it’s worth the time.
+        </p>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="counter">07 <small>/09</small></div>
+      <nav class="links" aria-label="more">
+        <a href="about.html">About</a>
+        <a href="mailto:hello@scribblemouth.com">Email</a>
+        <a href="https://instagram.com/scribblemouth_" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </nav>
+    </footer>
+  </div>
+</section>
+
 </body>
 </html>
