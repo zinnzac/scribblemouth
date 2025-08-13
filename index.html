@@ -58,12 +58,12 @@
 
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
     
-    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
+    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: overlay;}
     /* Chromatic aberration utility */
 .chroma {
   position: relative;
   /* override the headline’s difference blend so colors look right */
-  mix-blend-mode: normal;
+  mix-blend-mode: difference;
   --ca-offset: 1.5px;   /* horizontal split strength */
   --ca-blur: 0.4px;     /* soften colored layers */
   --ca-alpha: 0.85;     /* layer opacity */
@@ -119,6 +119,84 @@
       .links{ gap:14px; }
       .cta{ padding:10px 16px; }
     }
+
+/* keep the title above any overlays */
+.on-bg {
+  position: relative;
+  z-index: 20;      /* higher than the overlay's z-index */
+}
+
+/* make the overlay sit BELOW the title area */
+#about-card.card.has-overlay .overlay {
+  --pad: clamp(16px, 3vw, 40px);
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: var(--pad);
+  top: calc(20% + 24px);  /* start below the midline (below the title) */
+  background: rgba(0,0,0,.72);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 2.5vw, 36px);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
+
+/* show on hover/tap (you should already have these) */
+#about-card.card.has-overlay:hover .overlay,
+#about-card.card.has-overlay:focus-within .overlay,
+#about-card.card.has-overlay.is-open .overlay {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* optional stagger for overlay content */
+#about-card .overlay .content > * {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+#about-card:hover .overlay .content > *,
+#about-card:focus-within .overlay .content > *,
+#about-card.is-open .overlay .content > * {
+  opacity: 1; transform: none;
+}
+#about-card .overlay .content > *:nth-child(2){ transition-delay:.06s; }
+#about-card .overlay .content > *:nth-child(3){ transition-delay:.12s; }
+
+
+/* Subtle soft drop shadow (good for light text on photos) */
+.shadow-soft { text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+
+/* Stronger drop shadow */
+.shadow-strong { text-shadow: 0 4px 22px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.5); }
+
+/* Crisp outline (fake stroke) */
+.shadow-outline {
+  text-shadow:
+    1px 0 0 #000, -1px 0 0 #000,
+    0 1px 0 #000,  0 -1px 0 #000;
+}
+
+/* Neon/glow */
+.shadow-glow {
+  text-shadow: 0 0 8px rgba(0,255,255,.8), 0 0 24px rgba(0,255,255,.5);
+}
+
+/* Chromatic fringe (RGB split look) */
+.shadow-chroma {
+  text-shadow: -1px 0 0 #00e5ff, 1px 0 0 #ff2fd2;
+}
+
+    
+
   </style>
 </head>
 <script>
@@ -168,6 +246,14 @@ document.addEventListener('scroll', () => {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const card = document.getElementById('about-card');
+  if (card && window.matchMedia('(hover: none)').matches) {
+    card.addEventListener('click', () => card.classList.toggle('is-open'));
+  }
+});
+
 </script>
 
 <body>
@@ -196,26 +282,22 @@ document.addEventListener('scroll', () => {
       </footer>
     </div>
   </main>
-  <section class="card" role="region" aria-label="About ScribbleMouth">
+
+  <section class="card has-overlay" id="about-card" role="region" aria-label="About ScribbleMouth">
   <div class="bg" style="background-image:url('public/personal/hero2.jpg')" aria-hidden="true"></div>
   <div class="tint" aria-hidden="true"></div>
+
   <div class="inner">
     <header class="top">
-      <div class="brand chroma" data-text="ScribbleMouth">ScribbleMouth</div>
-
+      <div class="brand">ScribbleMouth</div>
       <button class="cta" onclick="location.href='about.html'">Learn more</button>
     </header>
 
-    <section class="center" aria-live="polite">
-      <div style="max-width:min(760px, 90%); text-align:center;">
-        <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
-          About me.
-        </h2>
-        <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
-          Longer dives into science and philosophy—clean visuals, clear thinking,
-          and the weird questions you actually care about.
-        </p>
-      </div>
+    <section class="center">
+      <!-- ALWAYS visible title on the background -->
+      <h2 class="headline shadow-strong" style="font-size:clamp(52px,4.2vw,88px); margin:0 0 500px;">
+        About me
+      </h2>
     </section>
 
     <footer class="bottom">
@@ -226,7 +308,21 @@ document.addEventListener('scroll', () => {
       </nav>
     </footer>
   </div>
+
+  <!-- Overlay now contains only the body copy / CTA -->
+  <div class="overlay" aria-hidden="false">
+    <div class="content" style="max-width:min(760px,90%);">
+      <p style="font-weight:600; color:rgba(255,255,255,.9); line-height:1.6; margin:0 0 10px;">
+        Longer dives into science and philosophy. Built for curiosity, not the algorithm.
+      </p>
+      <a class="cta" href="mailto:hello@scribblemouth.com">Say hi</a>
+    </div>
+  </div>
 </section>
+
+
+
+
 <section class="card" role="region" aria-label="Third Section">
   <div class="bg" style="background-image:url('public/space/hero3.jpg')" aria-hidden="true"></div>
   <div class="tint" aria-hidden="true"></div>
