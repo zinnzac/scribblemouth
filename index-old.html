@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ScribbleMouth</title>
+  <title>for the incurably curious.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -25,7 +25,22 @@
       position:relative; width:min(1100px,100%); aspect-ratio:16/9; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.25);
       background:#111;
     }
-    .bg{ position:absolute; inset:0; background: #222 url('hero1.jpg') center/cover no-repeat; transform:scale(1.02); }
+    .bg, .bg-next {
+  position: absolute;
+  inset: 0;
+  background: #222 center/cover no-repeat;
+  transform: translateX(0);
+  transition: transform 1s ease-in-out;
+}
+.bg-next {
+  transform: translateX(100%);
+}
+.slide-left {
+  transform: translateX(-100%);
+}
+.slide-in {
+  transform: translateX(0);
+}
     /* soft light rays tint */
     .tint{ position:absolute; inset:0; background:radial-gradient(100% 140% at 70% 0%, rgba(255,245,200,.22) 0%, rgba(0,0,0,0) 55%),
                                    linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.75) 100%); }
@@ -39,8 +54,7 @@
     .cta:active{ transform:translateY(1px); }
 
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
-    
-    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:0 4px 30px rgba(0,0,0,.45); mix-blend-mode: overlay;}
+    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:0 4px 30px rgba(0,0,0,.45); }
 
     .bottom{ display:flex; align-items:end; justify-content:space-between; }
     .counter{ font-weight:800; letter-spacing:.5px; font-size:clamp(22px, 3.2vw, 36px); text-shadow:0 2px 14px rgba(0,0,0,.4); }
@@ -62,15 +76,18 @@
 <body>
   <main class="card" role="main" aria-label="Hero">
     <div class="bg" aria-hidden="true"></div>
-    <div class="tint" aria-hidden="true"></div>
+<div class="bg-next" aria-hidden="true"></div>
+
+<div class="bg-next" aria-hidden="true"></div>
+
     <div class="inner">
       <header class="top">
-        <div class="brand">ScribbleMouth</div>
+        <div class="brand">for the incurably curious</div>
         <button class="cta">Sign up</button>
       </header>
 
       <section class="center" aria-live="polite">
-        <h1 class="headline">for the incurably curious.</h1>
+        <h1 class="headline">ScribbleMouth.</h1>
       </section>
 
       <footer class="bottom">
@@ -84,5 +101,49 @@
       </footer>
     </div>
   </main>
+<script>
+const images = [
+  'hero1.jpg',
+  'hero2.jpg',
+  'hero3.jpg'
+]; // adjust file names
+
+// preload images
+images.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
+let current = 0;
+const bg = document.querySelector('.bg');
+const bgNext = document.querySelector('.bg-next');
+
+bg.style.backgroundImage = `url(${images[current]})`;
+
+setInterval(() => {
+  const next = (current + 1) % images.length;
+  bgNext.style.backgroundImage = `url(${images[next]})`;
+
+  // animate: move current out, next in
+  bg.classList.add('slide-left');
+  bgNext.classList.add('slide-in');
+
+  // after animation, swap roles
+  setTimeout(() => {
+    bg.className = 'bg'; // reset classes
+    bgNext.className = 'bg-next'; // reset classes
+
+    // swap references so bg always holds current
+    const temp = bg.style.backgroundImage;
+    bg.style.backgroundImage = bgNext.style.backgroundImage;
+    bgNext.style.backgroundImage = temp;
+
+    current = next;
+  }, 1000); // matches CSS transition time
+
+}, 5000); // change every 5s
+</script>
+
+
 </body>
 </html>
