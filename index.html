@@ -25,8 +25,12 @@
       position:relative; width:min(1100px,100%); aspect-ratio:16/9; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.25);
       background:#111;
     }
-    .bg{ position:absolute; inset:0; background: #222 url('public/space/hero6.jpg') center/cover no-repeat; transform:scale(1.02); }
+    .bg{ position:absolute; inset:0; background: #222 center/cover no-repeat; transform:scale(1.02); opacity: 1; transition: opacity 0.8s ease-in-out; }
     /* soft light rays tint */
+    .bg.is-fading{ opacity:0; }
+    .bg.fade-out {
+    opacity: 0;
+  }
     .tint{ position:absolute; inset:0; background:radial-gradient(100% 140% at 70% 0%, rgba(255,245,200,.22) 0%, rgba(0,0,0,0) 55%),
                                    linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.75) 100%); }
     .inner{ position:relative; inset:0; height:100%; padding:28px; display:flex; flex-direction:column; }
@@ -40,7 +44,7 @@
 
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
     
-    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:0 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
+    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
 
     .bottom{ display:flex; align-items:end; justify-content:space-between; }
     .counter{ font-weight:800; letter-spacing:.5px; font-size:clamp(22px, 3.2vw, 36px); text-shadow:0 2px 14px rgba(0,0,0,.4); }
@@ -59,6 +63,42 @@
     }
   </style>
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Edit these to match the files you actually have
+  const images = [
+    'public/space/hero1.jpg',
+    'public/space/hero3.jpg',
+    'public/space/hero5.jpg',
+    'public/nature/hero1.jpg',
+    'public/nature/hero4.jpg',
+    'public/personal/hero1.jpg',
+  ];
+
+  const bg = document.querySelector('.bg');
+  if (!bg || images.length === 0) return;
+
+  // Preload images so the fade is smooth
+  images.forEach(src => { const img = new Image(); img.src = src; });
+
+  // Start from the first image
+  let idx = 0;
+  bg.style.backgroundImage = `url('${images[idx]}')`;
+
+  const swap = () => {
+    bg.classList.add('is-fading');        // fade out
+    setTimeout(() => {
+      idx = (idx + 1) % images.length;    // next
+      bg.style.backgroundImage = `url('${images[idx]}')`;
+      bg.classList.remove('is-fading');   // fade in
+    }, 800); // match CSS transition duration
+  };
+
+  // Change every 5 seconds
+  setInterval(swap, 5000);
+});
+</script>
+
 <body>
   <main class="card" role="main" aria-label="Hero">
     <div class="bg" aria-hidden="true"></div>
@@ -77,7 +117,7 @@
         <div class="counter">04 <small>/09</small></div>
         <nav class="links" aria-label="social">
           <a href="about.html">About Me</a>
-          <a href="https://instagram.com/scribblemouth_" target="_blank" rel="noopener noreferrer">Intagram</a>
+          <a href="https://instagram.com/scribblemouth_" target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href="https://www.tiktok.com/@scribblemouth_" target="_blank" rel="noopener noreferrer">TikTok</a>
           <a href="https://www.youtube.com/channel/UCtRcCBgb-BE4p9V2XIf6WZQ" target="_blank" rel="noopener noreferrer">YouTube</a>
         </nav>
