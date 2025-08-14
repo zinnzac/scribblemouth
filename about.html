@@ -3,73 +3,202 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Me - Ready co.</title>
+  <title>About — ScribbleMouth</title>
+
+  <!-- Fonts to match index -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --surface:#0b0b0b;
-      --text:#ffffff;
-      --text-dim:rgba(255,255,255,.7);
-      --pill:#0e0e0e;
-      --pill-hover:#141414;
+      --text:#ffffff;            /* main text color */
+      --text-dim:rgba(255,255,255,.78);
+      --page-bg:#0b0b0b;         /* dark surrounding */
+      --card-bg:#111111;         /* card surface */
+      --muted:#b9bcc4;
+      --radius:22px;
+      --shadow:0 30px 70px rgba(0,0,0,.25);
+      --max:1100px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; background:#e9e9e7; font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
-      display:grid; place-items:center; padding:24px;
+      margin:0; background:#e9e9e7; /* same paper tone as index */
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
     }
-    .card{
-      position:relative; width:min(1100px,100%); min-height:80vh; border-radius:22px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.25);
-      background:#111;
+    a{color:inherit; text-decoration:none}
+
+    /* Page shell */
+    .wrap{max-width:var(--max); margin-inline:auto; padding:28px 20px 80px}
+    header.top{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px}
+    .brand{font-weight:800; letter-spacing:.2px}
+    nav.links{display:flex; gap:18px; color:var(--text-dim); font-weight:600}
+    nav.links a{position:relative}
+    nav.links a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:1px; background:currentColor; opacity:0; transform:scaleX(.6); transition:.2s}
+    nav.links a:hover::after{opacity:1; transform:scaleX(1)}
+
+    /* Cards section */
+    .about-cards{display:grid; gap:60px; margin-top:24px}
+    .about-card{display:grid; grid-template-columns:repeat(12, 1fr); gap:24px; align-items:center}
+    .about-card .text{grid-column: span 6;}
+    .about-card .media{grid-column: span 6;}
+    .about-card .media img{width:100%; display:block; border-radius:14px; box-shadow:var(--shadow)}
+    .card-surface{background:var(--card-bg); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow)}
+    .about-card h2{margin:0 0 10px}
+    .about-card p{margin:0; color:var(--text-dim); line-height:1.6}
+
+    /* Alternate layouts */
+    .rev .text{order:2}
+    .rev .media{order:1}
+
+    /* Stack on small screens */
+    @media (max-width: 800px){
+      .about-card{grid-template-columns:1fr;}
+      .about-card .text, .about-card .media{grid-column: 1 / -1}
+      .rev .text{order:1}
+      .rev .media{order:2}
     }
-    .bg{ position:absolute; inset:0; background:#222 url('about-bg.jpg') center/cover no-repeat; }
-    .tint{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,.75) 100%); }
-    .inner{ position:relative; inset:0; height:100%; padding:28px; display:flex; flex-direction:column; }
-    .top{ display:flex; align-items:center; justify-content:space-between; }
-    .brand{ font-weight:800; font-size:clamp(16px, 2.2vw, 22px); text-shadow:0 1px 8px rgba(0,0,0,.35); }
-    .cta{ appearance:none; border:0; background:var(--pill); color:#fff; padding:12px 20px; border-radius:999px; font-weight:600; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 1px 0 rgba(255,255,255,.06); }
-    .cta:hover{ background:var(--pill-hover); }
-    .center{ flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:20px; position:relative; padding:20px; }
-    .center::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,0.35);
-      border-radius:16px;
-      z-index:0;
-    }
-    .headline{ position:relative; z-index:1; font-weight:800; font-size:clamp(38px, 6vw, 80px); text-shadow:0 4px 30px rgba(0,0,0,.45); }
-    .subhead{ position:relative; z-index:1; font-size:clamp(16px, 1.5vw, 22px); color:var(--text-dim); max-width:800px; line-height:1.5; }
-    .bottom{ display:flex; align-items:end; justify-content:center; padding-top:20px; gap:20px; }
-    .links{ display:flex; gap:22px; font-weight:600; font-size:clamp(12px, 1.3vw, 15px); color:var(--text-dim); }
-    .links a{ color:inherit; text-decoration:none; position:relative; }
-    .links a::after{ content:""; position:absolute; left:0; right:0; bottom:-4px; height:1px; background:currentColor; opacity:0; transform:scaleX(.6); transition:opacity .2s ease, transform .2s ease; }
-    .links a:hover::after{ opacity:1; transform:scaleX(1); }
+
+    /* Longform section (auto-loaded) */
+    .longform{margin-top:70px}
+    .longform .surface{background:var(--card-bg); border-radius:var(--radius); padding:min(32px, 6vw); box-shadow:var(--shadow)}
+    .prose{color:var(--text-dim); line-height:1.75}
+    .prose h2, .prose h3{color:var(--text); margin:1.6em 0 .4em}
+    .prose p{margin:0 0 1em}
+    .prose blockquote{margin:1.2em 0; padding-left:16px; border-left:3px solid rgba(255,255,255,.18); color:rgba(255,255,255,.85)}
+    .prose ul, .prose ol{margin:0 0 1em 1.25em}
+    .prose a{color:#cfe8ff}
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="bg" aria-hidden="true"></div>
-    <div class="tint" aria-hidden="true"></div>
-    <div class="inner">
-      <header class="top">
-        <div class="brand">Ready co.</div>
-        <a class="cta" href="index.html">Home</a>
-      </header>
-      <section class="center">
-        <h1 class="headline">About Me</h1>
-        <p class="subhead">Come back later my fellow human, this place is not done.</p>
-      </section>
-      <footer class="bottom">
-        <nav class="links">
-          <a href="index.html">Home.</a>
-          <a href="#">Contact.</a>
-        </nav>
-      </footer>
-    </div>
-  </main>
+  <div class="wrap">
+    <!-- Minimal header -->
+    <header class="top">
+      <div class="brand">ScribbleMouth</div>
+      <nav class="links" aria-label="Primary">
+        <a href="/index.html">Home</a>
+        <a href="#cards">Highlights</a>
+        <a href="#about-text">About</a>
+      </nav>
+    </header>
+
+    <!-- Three alternating cards -->
+    <section id="cards" class="about-cards">
+      <!-- Card 1: text left, image right -->
+      <article class="about-card">
+        <div class="text card-surface">
+          <h2>The beginning</h2>
+          <p>I grew up at Bondi Beach in Australia where I was lucky enough to have the beach at my finger tips. To this day, I see the ocean as likely my greatest source of inspiration, with the close contenders of the cosmos, music and snooker.
+ 
+I got to experience the privilege of a family that encouraged me to be whatever I wanted to be. This personal freedom to choose how one can most contribute to this beautiful world really informs my decisions and is something I feel really passionate about when sharing my own curiosities to help encourage everyone around me to embrace authenticity and a positive perspective of life.
+</p>
+        </div>
+        <div class="media"><img src="public/images/about5.jpg" alt="Curiosity"></div>
+      </article>
+
+      <!-- Card 2: text right, image left -->
+      <article class="about-card rev">
+        <div class="text card-surface">
+          <h2>My dad.</h2>
+          <p>My dad is a curious guy himself. I'm quite used to hearing the radio or history documentaries (particularly WWII and JFK assassination ones) playing in the background of the house. I would also hear my dad on that same radio or TV. People wanted his opinions on things because he's a unique (sometimes stubborn) thinker and a brilliant public speaker - no surprises he's my dad. 
+
+He also encouraged my love for astronomy from a young age and I still remember being very young when I explained to him my (now debunked) hypothesis of why the sky is blue because light reflects off of the ocean, wraps around the sun and shoots back to Earth. I remember him telling me I should go on the ABC radio and tell the world my theory. He probably doesn't remember but maybe that one miniscule moment is the reason I've done any of this at all.
+</p>
+        </div>
+        <div class="media"><img src="public/images/about3.jpg" alt="Storytelling"></div>
+      </article>
+
+      <!-- Card 3: text left, image right -->
+      <article class="about-card">
+        <div class="text card-surface">
+          <h2>My mum.</h2>
+          <p>I was blessed by a maternal lineage of strong women. My mum's a boss, literally and figuratively. She grew up with her sister and single mother - my aunty and granny. These two family members were there every Christmas, Easter and school holidays. If anyone encouraged me to challenge the status quo is was my aunty and granny. I would get secret recommendations from them to talk back to the teacher when I thought something was unfair - 'stand up for what's right' was a bit of a motto.
+
+Despite this anti-authoritarianism within my maternal side of the family, my mum and aunty really new how to play the system, not just break it. I don't think big challenges ever scared my mum. She looks for solutions rather than problems, so nothing is too daunting for her. This strength of hers never came naturally to me, but she has (from day one) always supported me in finding that strength - "you're stronger than you think you are Zachary".
+</p>
+        </div>
+        <div class="media"><img src="public/images/about4.jpg" alt="Adventure"></div>
+      </article>
+
+      <!-- Card 4: text right, image left -->
+      <article class="about-card rev">
+        <div class="text card-surface">
+          <h2>My brother</h2>
+          <p>I always looked up to my older brother. Almost everything I ever did was in his footsteps. Sacha would show me all the fun video games as children. Sacha introduced me to The Beatles and The Doors, two bands that became highly influential to the development of my personality in my teenage years. Sacha encouraged me to take up surfing, an activity I think is my number one favourite hobby. Growing up Sacha would do debating, public speaking, be the lead in the school plays, go to parties. Everything I thought I wasn't charismatic enough to do. And Sacha is smart, both in the streets and in the books.</p>
+        </div>
+        <div class="media"><img src="public/images/about8.jpg" alt="Storytelling"></div>
+      </article>
+
+      <!-- Card 5: text left, image right -->
+      <article class="about-card">
+        <div class="text card-surface">
+          <h2>who am i?</h2>
+          <p>I grew up around a pretty amazing family. But strangely enough, their brilliance suffocated me - with all the space they took up sometimes I felt like there wasn't much left for me. To be heard I had to be oppositional. Sacha was the handsome one, I was the cute one. He was the extrovert, I was the introvert. Despite being "the shy kid" I felt that title never suited me. I never matched my mums discipline and work ethic and I would frequently argue with my dad (our similar minds were analogous to two south poles of a magnet). I assumed the small position in the family. When I started growing, I would hide it from them.  
+
+Growing up and losing my innocence in the face of my family wasn't easy for me, so I became secretive about my life and cut off personal relationships I had with them in this time. I don't blame them for this, I take responsibility for my choices, but this fear to shine my light and show the world my growth can still be an insecurity of mine. I cringe a lot at myself and often think I being narcissistic by expressing myself.
+</p>
+        </div>
+        <div class="media"><img src="public/images/about7.jpg" alt="Adventure"></div>
+      </article>
+
+      <!-- Card 6: text right, image left -->
+      <article class="about-card rev">
+        <div class="text card-surface">
+          <h2>self-discovery</h2>
+          <p>It wasn't until I moved out of home at 18 when I had, as a friend described it, a "personality revolution" (Thanks Noah, your words stuck with me). I figured out who I was at this time. I wasn't the shy kid, I rather surprised myself by how many friends I made. I was more social than I thought and learned the most powerful message no one else can teach… you can do anything you put your mind towards.
+ 
+
+Life obviously wasn't smooth sailing from there however. Deep down, from the age of 12 when I started watching Vsauce and Veritasium, I knew I wanted to be like them so I started making educational videos when I was 18. I couldn't for the life of me tell anyone in my life about it so I stopped making videos and pretended like it never happened, I was so embarrassed of them. I took about 4 more years to figure out my life but more importantly build the courage to take action in my life. I started making videos again and once I'd finished university and a short stint of teaching, at the beginning of 2025 I committed to ScribbleMouth.
+</p>
+        </div>
+        <div class="media"><img src="public/images/about8.jpg" alt="Storytelling"></div>
+      </article>
+
+      <!-- Card 7: text left, image right -->
+      <article class="about-card">
+        <div class="text card-surface">
+          <h2>today</h2>
+          <p>Today is the 14th August and I just hit 200k followers on Instagram. Again, the fear of narcissism is telling me to stop boasting, but I know deep down I'm actually just happy with my achievement. I like seeing when sportsmen celebrate after a big win because you see how much it means to them. How much they have gone through to make their dreams happen. ScribbleMouth is never about the follower count. But I can't lie, to see this community grow and people resonate with what I'm trying to share definitely creates a warm feeling in my belly.
+ 
+I was lost for so many years and to find something I'm invigorated and impassioned by is the greatest feeling I've ever had in life. I hope as I grow this community I can continue to share this experience to the world around me and encourage everyone to be authentically confident and support the world around us.
+ 
+Thanks for reading :)
+</p>
+        </div>
+        <div class="media"><img src="public/images/about7.jpg" alt="Adventure"></div>
+      </article>
+    </section>
+
+    <!-- Longform text that loads from /public/content/about.html -->
+    <section id="about-text" class="longform">
+      <div class="surface">
+        <article id="about-content" class="prose">
+          <p><em>Loading your About Me text…</em></p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Fetch longform content from a separate file and inject into the page.
+    // Put your text at: /public/content/about.html (create the folders if needed).
+    (async function loadLongform(){
+      try {
+        const res = await fetch('/public/content/about.html', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('Missing /public/content/about.html');
+        const html = await res.text();
+        document.getElementById('about-content').innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        document.getElementById('about-content').innerHTML = '<p>Could not load the About text. Make sure your file exists at <code>/public/content/about.html</code>.</p>';
+      }
+    })();
+  </script>
+
+  <noscript>
+    <style>.prose{color:#fff}</style>
+    <div class="wrap"><p><strong>Note:</strong> Enable JavaScript to load the About Me content from a separate file.</p></div>
+  </noscript>
 </body>
 </html>

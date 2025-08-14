@@ -58,12 +58,12 @@
 
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
     
-    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: overlay;}
+    .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
     /* Chromatic aberration utility */
 .chroma {
   position: relative;
   /* override the headline’s difference blend so colors look right */
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
   --ca-offset: 1.5px;   /* horizontal split strength */
   --ca-blur: 0.4px;     /* soften colored layers */
   --ca-alpha: 0.85;     /* layer opacity */
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </header>
 
       <section class="center" aria-live="polite">
-        <h1 class="headline chroma" data-text="curious.">curious.</h1>
+        <h1 class="headline" data-text="curious.">curious.</h1>
 
       </section>
 
