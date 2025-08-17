@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScribbleMouth — Store</title>
+  <style>
+    :root {
+      --bg: #0b0b0c;
+      --panel: #131317;
+      --text: #e9e9ef;
+      --muted: #b7b7c2;
+      --brand: #7c5cff; /* change this to your brand colour */
+      --brand-2: #4fd1c5;
+      --danger: #ff5861;
+      --ok: #35d07f;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.15), transparent),
+                  radial-gradient(1000px 500px at 120% 0%, rgba(79,209,197,.1), transparent),
+                  var(--bg);
+      line-height: 1.5;
+    }
+
+    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(11,11,12,.7); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text);
+      font-weight: 700; letter-spacing: .2px;
+    }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: var(--shadow);
+    }
+
+    .cart-btn { position: relative; }
+    button, .btn {
+      appearance: none; border: none; cursor: pointer;
+      padding: 12px 18px; background: var(--brand); color: #fff; border-radius: 999px;
+      font-weight: 700; transition: transform .06s ease, filter .2s ease, background .2s ease;
+    }
+    button:hover, .btn:hover { filter: brightness(1.05); }
+    button:active, .btn:active { transform: translateY(1px) scale(.99); }
+
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.15); color: var(--text); }
+    .btn-ghost { background: transparent; color: var(--text); padding: 10px 14px; }
+
+    .badge {
+      position: absolute; right: -6px; top: -6px; background: var(--danger); color: #fff;
+      min-width: 20px; height: 20px; border-radius: 999px; font-size: 12px; display: grid; place-items: center;
+      padding: 0 6px; border: 2px solid var(--panel);
+    }
+
+    /* Hero */
+    .hero { padding: 36px 0 8px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(28px, 4.5vw, 44px); line-height: 1.1; }
+    .hero p { margin: 0 0 18px; color: var(--muted); }
+    .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+    .input {
+      background: var(--panel); border: 1px solid rgba(255,255,255,.08); color: var(--text);
+      padding: 12px 14px; border-radius: 12px; outline: none; min-width: 220px;
+    }
+    select.input { padding-right: 32px; }
+
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .card {
+      grid-column: span 12;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      display: grid; grid-template-rows: 220px auto;
+      transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover { transform: translateY(-2px); border-color: rgba(124,92,255,.35); box-shadow: 0 12px 40px rgba(124,92,255,.15); }
+
+    .img { width: 100%; height: 100%; object-fit: cover; display: block; background: #0f0f13; }
+    .card-body { padding: 16px; display: grid; gap: 8px; }
+    .title { font-weight: 700; margin: 0; font-size: 18px; }
+    .desc { color: var(--muted); font-size: 14px; margin: 0; min-height: 40px; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .price { font-weight: 800; letter-spacing: .3px; }
+    .pill { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); color: var(--muted); }
+
+    @media (min-width: 540px) { .card { grid-column: span 6; } }
+    @media (min-width: 900px) { .card { grid-column: span 4; } }
+
+    /* Cart Drawer */
+    .drawer { position: fixed; inset: 0; pointer-events: none; }
+    .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.45); opacity: 0; transition: opacity .2s ease; }
+    .panel {
+      position: absolute; right: 0; top: 0; height: 100%; width: min(520px, 95vw);
+      background: #0f0f13; border-left: 1px solid rgba(255,255,255,.08);
+      transform: translateX(100%); transition: transform .25s ease; display: grid; grid-template-rows: auto 1fr auto;
+    }
+    .drawer.open { pointer-events: auto; }
+    .drawer.open .overlay { opacity: 1; }
+    .drawer.open .panel { transform: translateX(0); }
+
+    .panel header, .panel footer { padding: 18px 16px; }
+    .panel header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .panel footer { border-top: 1px solid rgba(255,255,255,.08); display: grid; gap: 10px; }
+    .items { overflow: auto; }
+
+    .line { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .thumb { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; }
+    .line h4 { margin: 0 0 4px; font-size: 15px; }
+    .qty { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.15); padding: 6px 10px; border-radius: 999px; }
+    .qty button { background: transparent; color: var(--text); padding: 0 6px; }
+    .remove { color: var(--danger); background: transparent; }
+    .totals { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 16px 0; color: var(--muted); }
+    .grand { font-weight: 800; color: var(--text); }
+
+    footer { margin: 40px 0 80px; color: var(--muted); text-align: center; }
+    .note { font-size: 13px; opacity: .9; }
+    a { color: #c9c9ff; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <div class="logo" aria-hidden="true"></div>
+        <span>ScribbleMouth Store</span>
+      </a>
+      <div class="actions">
+        <button class="btn-ghost" onclick="scrollTo(0,0)">Home</button>
+        <button class="btn-ghost" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Products</button>
+        <button class="btn cart-btn" id="openCart">
+          Cart <span class="badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="container hero">
+    <h1>Curious goods for curious minds</h1>
+    <p>Prints, apparel, and digital downloads from the ScribbleMouth universe.</p>
+    <div class="filters">
+      <input id="search" class="input" type="search" placeholder="Search products…" />
+      <select id="category" class="input">
+        <option value="all">All categories</option>
+        <option value="Apparel">Apparel</option>
+        <option value="Prints">Prints</option>
+        <option value="Digital">Digital</option>
+      </select>
+      <button class="btn-outline" id="clearFilters">Clear</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="products" class="grid" aria-live="polite"></section>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="overlay" id="overlay" role="button" aria-label="Close cart"></div>
+    <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <header>
+        <h3 id="cartTitle" style="margin:0">Your cart</h3>
+        <button class="btn-outline" id="closeCart">Close</button>
+      </header>
+      <div class="items" id="cartItems"></div>
+      <footer>
+        <div class="totals">
+          <div>Subtotal</div><div id="subtotal">$0.00</div>
+          <div>Estimated tax</div><div id="tax">$0.00</div>
+          <div class="grand">Total</div><div class="grand" id="total">$0.00</div>
+        </div>
+        <button id="checkout" class="btn">Checkout</button>
+        <div class="note">Tip: For instant payments, attach <strong>Stripe Payment Links</strong> to each product (see code comment). If you don’t have those yet, checkout will create an email order.</div>
+      </footer>
+    </aside>
+  </div>
+
+  <footer class="container">
+    <p class="note">© <span id="year"></span> ScribbleMouth. All rights reserved. | <a href="#" onclick="alert('Add your policy URL');return false;">Refund policy</a></p>
+  </footer>
+
+  <script>
+    // -----------------------------
+    // 1) Product catalog
+    //    - price in cents
+    //    - paymentLink: paste your Stripe Payment Link URL for one-click Buy Now
+    // -----------------------------
+    const PRODUCTS = [
+      {
+        id: 'calendar-curiosity',
+        name: 'Curiosity Calendar 2026',
+        price: 2490,
+        category: 'Desk',
+        image: 'public/store/store1.jpg',
+        description: 'Every day that you don’t learn something new is a day wasted.',
+        paymentLink: '' // e.g. 'https://buy.stripe.com/test_xxx'
+      },
+      {
+        id: 'shirt-1',
+        name: 'Shirts',
+        price: 2090,
+        category: 'Apparel',
+        image: 'public/store/store1.jpg',
+        description: 'just a good shirt.',
+        paymentLink: ''
+      },
+      {
+        id: 'notebook',
+        name: "The Scribbler's Notebook",
+        price: 1990,
+        category: 'Books',
+        image: 'public/store/store1.jpg',
+        description: 'Scribble all your genius in one place.',
+        paymentLink: ''
+      },
+      {
+        id: 'mug',
+        name: "Philosopher's Mug",
+        price: 1990,
+        category: 'Home',
+        image: 'public/store/store1.jpg',
+        description: 'A good idea is often just one sip.',
+        paymentLink: ''
+      },
+      {
+        id: 'mug',
+        name: "Philosopher's Mug",
+        price: 1990,
+        category: 'Home',
+        image: 'public/store/store1.jpg',
+        description: 'A good idea is often just one sip.',
+        paymentLink: ''
+      },
+      {
+        id: 'mug',
+        name: "Philosopher's Mug",
+        price: 1990,
+        category: 'Home',
+        image: 'public/store/store1.jpg',
+        description: 'A good idea is often just one sip.',
+        paymentLink: ''
+      },
+     
+      
+      
+    ];
+
+    // -----------------------------
+    // 2) State & helpers
+    // -----------------------------
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const fmt = cents => (cents/100).toLocaleString(undefined, {style:'currency', currency: 'AUD'});
+
+    let cart = JSON.parse(localStorage.getItem('sm_cart') || '[]'); // [{id, qty}]
+
+    function saveCart(){ localStorage.setItem('sm_cart', JSON.stringify(cart)); }
+    function cartCount(){ return cart.reduce((n, i) => n + i.qty, 0); }
+
+    // -----------------------------
+    // 3) Render products
+    // -----------------------------
+    function renderProducts(list = PRODUCTS){
+      const grid = $('#products');
+      grid.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <img class="img" src="${p.image}" alt="${p.name}">
+          <div class="card-body">
+            <div class="row">
+              <h3 class="title">${p.name}</h3>
+              <span class="pill">${p.category}</span>
+            </div>
+            <p class="desc">${p.description}</p>
+            <div class="row">
+              <div class="price">${fmt(p.price)}</div>
+              <div class="row" style="gap:8px">
+                <button class="btn-outline" data-id="${p.id}" data-action="add">Add to cart</button>
+                <a class="btn" href="${p.paymentLink || '#'}" target="_blank" rel="noopener" data-buy="${p.id}">Buy now</a>
+              </div>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    // -----------------------------
+    // 4) Cart operations
+    // -----------------------------
+    function addToCart(id, qty=1){
+      const item = cart.find(i => i.id === id);
+      if(item) item.qty += qty; else cart.push({id, qty});
+      saveCart();
+      updateCartUI();
+    }
+    function removeFromCart(id){ cart = cart.filter(i => i.id !== id); saveCart(); updateCartUI(); }
+    function changeQty(id, delta){
+      const item = cart.find(i => i.id === id);
+      if(!item) return;
+      item.qty += delta;
+      if(item.qty <= 0) removeFromCart(id); else { saveCart(); updateCartUI(); }
+    }
+
+    function expandedCart(){
+      return cart.map(i => {
+        const p = PRODUCTS.find(p => p.id === i.id);
+        return {...p, qty: i.qty, line: p.price * i.qty };
+      });
+    }
+
+    function updateCartUI(){
+      $('#cartCount').textContent = cartCount();
+      const items = expandedCart();
+      const list = $('#cartItems');
+      list.innerHTML = items.length ? '' : '<p style="padding:16px; color: var(--muted)">Your cart is empty.</p>';
+
+      let subtotal = 0;
+      items.forEach(it => {
+        subtotal += it.line;
+        const row = document.createElement('div');
+        row.className = 'line';
+        row.innerHTML = `
+          <img class="thumb" src="${it.image}" alt="${it.name}">
+          <div>
+            <h4>${it.name}</h4>
+            <div class="price">${fmt(it.price)}</div>
+            <div class="qty">
+              <button aria-label="Decrease" onclick="changeQty('${it.id}', -1)">−</button>
+              <span>${it.qty}</span>
+              <button aria-label="Increase" onclick="changeQty('${it.id}', 1)">+</button>
+            </div>
+          </div>
+          <div style="display:grid; gap:8px; justify-items:end">
+            <div>${fmt(it.line)}</div>
+            <button class="remove" onclick="removeFromCart('${it.id}')">Remove</button>
+          </div>`;
+        list.appendChild(row);
+      });
+
+      const tax = Math.round(subtotal * 0.1); // 10% GST estimate — adjust or remove
+      const total = subtotal + tax;
+      $('#subtotal').textContent = fmt(subtotal);
+      $('#tax').textContent = fmt(tax);
+      $('#total').textContent = fmt(total);
+    }
+
+    // -----------------------------
+    // 5) Filters / Search
+    // -----------------------------
+    function applyFilters(){
+      const q = $('#search').value.trim().toLowerCase();
+      const cat = $('#category').value;
+      const filtered = PRODUCTS.filter(p => {
+        const matchQ = !q || `${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q);
+        const matchC = cat === 'all' || p.category === cat;
+        return matchQ && matchC;
+      });
+      renderProducts(filtered);
+    }
+
+    // -----------------------------
+    // 6) Checkout
+    //  - If every cart item has a paymentLink and qty===1, we could open them one-by-one.
+    //  - Simpler default: generate an email order to your inbox.
+    // -----------------------------
+    function checkout(){
+      const items = expandedCart();
+      if(!items.length) { alert('Your cart is empty.'); return; }
+
+      // If all items have paymentLink AND all quantities are 1, open each link in a new tab
+      const canDirectPay = items.every(i => i.paymentLink && i.qty === 1);
+      if(canDirectPay){
+        items.forEach(i => window.open(i.paymentLink, '_blank'));
+        return;
+      }
+
+      // Email fallback
+      const to = 'orders@scribblemouth.com'; // <- change this to your address
+      const subject = encodeURIComponent('New order from ScribbleMouth Store');
+      const lines = items.map(i => `• ${i.name} × ${i.qty} — ${fmt(i.line)}`).join('%0A');
+      const totals = `Subtotal: ${fmt(items.reduce((s,i)=>s+i.line,0))}`;
+      const body = encodeURIComponent(`Hi, I'd like to order:%0A${lines}%0A%0A${totals}%0A%0AName:%0AShipping address:%0APhone/email:`);
+      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    }
+
+    // -----------------------------
+    // 7) Event wiring
+    // -----------------------------
+    document.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('[data-action="add"]');
+      if(addBtn){ addToCart(addBtn.dataset.id, 1); }
+
+      const buyBtn = e.target.closest('[data-buy]');
+      if(buyBtn){
+        const product = PRODUCTS.find(p => p.id === buyBtn.dataset.buy);
+        if(!product.paymentLink){
+          e.preventDefault();
+          alert('No Payment Link set for this product yet. Add one in the PRODUCTS array.');
+        }
+      }
+    });
+
+    $('#openCart').addEventListener('click', () => openCart(true));
+    $('#closeCart').addEventListener('click', () => openCart(false));
+    $('#overlay').addEventListener('click', () => openCart(false));
+    $('#checkout').addEventListener('click', checkout);
+
+    $('#search').addEventListener('input', applyFilters);
+    $('#category').addEventListener('change', applyFilters);
+    $('#clearFilters').addEventListener('click', () => { $('#search').value=''; $('#category').value='all'; applyFilters(); });
+
+    function openCart(open){
+      const d = $('#drawer');
+      d.classList.toggle('open', open);
+      d.setAttribute('aria-hidden', String(!open));
+    }
+
+    // -----------------------------
+    // 8) Init
+    // -----------------------------
+    renderProducts();
+    updateCartUI();
+    $('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -56,6 +56,11 @@
     .cta:hover{ background:var(--pill-hover); }
     .cta:active{ transform:translateY(1px); }
 
+    .big-button{ appearance:none; border:0; background:var(--pill); color:#fff; padding:16px 30px; border-radius:50px; font-weight:600; font-size: 14px ; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 1px 0 rgba(255,255,255,.06);
+          transition:transform .08s ease, background .15s ease, box-shadow .15s ease; }
+    .big-button:hover{ background:var(--pill-hover); }
+    .big-button:active{ transform:translateY(1px); }  
+    
     .center{ flex:1; display:grid; place-items:center; text-align:center; }
     
     .headline{ font-weight:800; font-size:clamp(38px, 8.5vw, 110px); line-height:1; text-shadow:1 4px 30px rgba(0,0,0,.45); mix-blend-mode: difference;}
@@ -128,7 +133,7 @@
 
 /* make the overlay sit BELOW the title area */
 #about-card.card.has-overlay .overlay {
-  --pad: clamp(16px, 3vw, 40px);
+  --pad: clamp(240px, 3vw, 40px);
   position: absolute;
   left: var(--pad);
   right: var(--pad);
@@ -263,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="inner">
       <header class="top">
         <div class="brand">ScribbleMouth</div>
-        <button class="cta">Sign up</button>
+        <button class="cta" onclick="location.href='store.html'">Store</button>
       </header>
 
       <section class="center" aria-live="polite">
@@ -290,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="inner">
     <header class="top">
       <div class="brand">ScribbleMouth</div>
-      <button class="cta" onclick="location.href='about.html'">Learn more</button>
+     <!-- <button class="cta" onclick="location.href='about.html'">Learn more</button> -->
     </header>
 
     <section class="center">
@@ -299,23 +304,23 @@ document.addEventListener('DOMContentLoaded', () => {
         About me
       </h2>
     </section>
-
-    <footer class="bottom">
+  </div>
+<footer class="bottom">
       <div class="counter">02 <small>/04</small></div>
       <nav class="links" aria-label="more">
         <a href="about.html">About</a>
-        <a href="mailto:hello@scribblemouth.com">Contact</a>
+        <a href="mailto:hello@scribblemouth.com">Email</a>
+        <a href="https://instagram.com/scribblemouth_" target="_blank" rel="noopener noreferrer">Instagram</a>
       </nav>
     </footer>
-  </div>
-
   <!-- Overlay now contains only the body copy / CTA -->
   <div class="overlay" aria-hidden="false">
     <div class="content" style="max-width:min(760px,90%);">
-      <p style="font-weight:600; color:rgba(255,255,255,.9); line-height:1.6; margin:0 0 10px;">
-        Longer dives into science and philosophy. Built for curiosity, not the algorithm.
+      <p style="font-weight:600; font-size: 14px; color:rgba(255,255,255,.9); line-height:1.6; margin:0 0 10px;">
+        My curiosity knows no bounds... unfortunately this has often lead me straight to trouble.<br>But I would not be who am if it weren't for my life beyond the screen and behind the scribble.
       </p>
-      <a class="cta" href="mailto:hello@scribblemouth.com">Say hi</a>
+      <!-- <a class="cta" href="mailto:zz@scribblemouth.com">Say hi</a> -->
+       <button class="big-button" onclick="location.href='about.html'">Learn more</button>
     </div>
   </div>
 </section>
@@ -335,11 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <section class="center" aria-live="polite">
       <div style="max-width:min(760px, 90%); text-align:center;">
         <h2 class="headline" style="font-size:clamp(26px,4.2vw,44px); font-weight:800; margin:0 0 10px;">
-          Questions worth chasing.
+          Curiosity Shop.
         </h2>
         <p style="font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; margin:0;">
-          Where curiosity meets research, and ideas are tested against reality.
-          The universe doesn’t hand out answers freely — but it leaves clues.
+          The one stop shop to get all your curiosity needs. <br> Shirts, mugs, tea, calendars, stationery, and more.
         </p>
       </div>
     </section>
