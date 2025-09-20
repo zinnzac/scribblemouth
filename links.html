@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScribbleMouth — Links</title>
+  <meta name="description" content="All the essential links for ScribbleMouth: podcast, live talks, socials, and more." />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:title" content="ScribbleMouth — Links" />
+  <meta property="og:description" content="All the essential links in one place." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/public/og-links.jpg" />
+  <link rel="icon" href="/public/favicon.ico" />
+  <style>
+    /* --- Design tokens --- */
+    :root {
+      --bg: #0b0b10;
+      --card: #11121a;
+      --text: #e7e8ee;
+      --muted: #b7b9c6;
+      --brand: #7dd3fc;   /* cyan-300 */
+      --brand-2: #a78bfa; /* violet-400 */
+      --ring: #93c5fd;    /* blue-300 */
+      --link-bg: #161823;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0b0b10;
+        --muted: #4b5563;
+        --brand: #0284c7;
+        --brand-2: #6d28d9;
+        --ring: #2563eb;
+        --link-bg: #f1f5f9;
+        --shadow: 0 10px 30px rgba(2,6,23,.08);
+      }
+    }
+
+    [data-theme="light"] { color-scheme: light; }
+    [data-theme="dark"]  { color-scheme: dark; }
+
+    /* --- Base --- */
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(125, 211, 252, .12), transparent 60%),
+                  radial-gradient(1000px 700px at 110% 10%, rgba(167, 139, 250, .10), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+      display: grid;
+      gap: 18px;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+    }
+    .skip-link:focus {
+      position: fixed; left: 16px; top: 16px; width: auto; height: auto; padding: 10px 14px;
+      background: var(--card); color: var(--text); border-radius: 10px; outline: 2px solid var(--ring);
+      z-index: 9999;
+    }
+
+    header.profile {
+      display: grid; gap: 14px; place-items: center; text-align: center;
+      background: linear-gradient(180deg, rgba(125,211,252,.08), rgba(167,139,250,.08));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+    .avatar {
+      width: 92px; height: 92px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.14);
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+      object-fit: cover;
+      background: var(--link-bg);
+    }
+    .name { font-weight: 800; letter-spacing: .2px; font-size: 1.4rem; }
+    .tagline { color: var(--muted); font-size: .98rem; }
+
+    /* Social row */
+    .socials { display: grid; grid-auto-flow: column; gap: 10px; align-items: center; }
+    .icon-btn {
+      display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+      background: var(--link-bg); box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: transform .15s ease, box-shadow .2s ease;
+    }
+    .icon-btn:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+    .icon-btn:hover { transform: translateY(-2px); }
+    .icon-btn svg { width: 22px; height: 22px; fill: currentColor; color: var(--text); }
+
+    /* Link cards */
+    main { display: grid; gap: 12px; }
+    .link-card {
+      display: grid; grid-template-columns: 1fr auto; align-items: center;
+      padding: 16px 18px; border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)), var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      text-decoration: none; color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, border-color .15s ease, background .3s ease;
+      min-height: 60px;
+    }
+    .link-card:hover { transform: translateY(-1.5px); border-color: rgba(147,197,253,.5); }
+    .link-title { font-weight: 700; letter-spacing: .3px; }
+    .link-desc { color: var(--muted); font-size: .92rem; }
+    .chev { opacity: .7; }
+
+    /* Featured block */
+    .feature {
+      background: conic-gradient(from 120deg at 50% 50%, rgba(125,211,252,.16), rgba(167,139,250,.16), rgba(125,211,252,.16));
+      border: 1px solid rgba(125,211,252,.35);
+    }
+
+    /* Toolbar */
+    .toolbar { display: grid; grid-auto-flow: column; justify-content: end; gap: 8px; }
+    .theme-toggle, .copy-btn {
+      background: var(--link-bg); color: var(--text);
+      border-radius: 12px; border: 1px solid rgba(255,255,255,.08);
+      padding: 10px 12px; cursor: pointer;
+    }
+    .theme-toggle:focus-visible, .copy-btn:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+
+    footer { text-align: center; color: var(--muted); font-size: .9rem; padding-top: 10px; }
+
+    /* Responsive tweaks */
+    @media (min-width: 680px) {
+      .wrap { padding: 48px 24px 72px; }
+      .name { font-size: 1.6rem; }
+      .link-card { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#links">Skip to links</a>
+
+  <div class="wrap" role="application" aria-label="Link hub">
+    <!-- Optional toolbar -->
+    <div class="toolbar" aria-label="Page tools">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-live="polite" aria-pressed="false" title="Toggle theme">
+        🌓 Toggle theme
+      </button>
+    </div>
+
+    <header class="profile" role="banner">
+      <img class="avatar" src="/public/avatar.jpg" alt="ScribbleMouth avatar" loading="lazy" decoding="async" />
+      <div class="name" id="name">ScribbleMouth</div>
+      <p class="tagline" id="tagline">Science × philosophy × wonder — videos, podcast, and live talks.</p>
+      <nav class="socials" aria-label="Social links">
+        <!-- TODO: Replace # with your URLs -->
+        <a class="icon-btn" href="#" target="_blank" rel="me noopener" aria-label="Instagram">
+          <!-- Instagram SVG -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm6-2.75a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 18 6.75z"/></svg>
+        </a>
+        <a class="icon-btn" href="#" target="_blank" rel="me noopener" aria-label="TikTok">
+          <!-- TikTok SVG -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 3.5c.7 1.4 1.9 2.5 3.4 3v3.2c-1.6-.1-3.1-.7-4.4-1.6v5.9c0 3.8-3.1 6.9-6.9 6.9S2.7 17.8 2.7 14s3.1-6.9 6.9-6.9c.4 0 .8 0 1.2.1v3.4c-.4-.1-.8-.1-1.2-.1-2 0-3.5 1.6-3.5 3.5S7.6 17.6 9.6 17.6s3.5-1.6 3.5-3.5V2.5h4.4z"/></svg>
+        </a>
+        <a class="icon-btn" href="#" target="_blank" rel="me noopener" aria-label="YouTube">
+          <!-- YouTube SVG -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7.5a4 4 0 0 0-2.8-2.8C18.6 4.2 12 4.2 12 4.2s-6.6 0-8.3.5A4 4 0 0 0 .9 7.5 41 41 0 0 0 .4 12a41 41 0 0 0 .5 4.5 4 4 0 0 0 2.8 2.8c1.7.5 8.3.5 8.3.5s6.6 0 8.3-.5a4 4 0 0 0 2.8-2.8c.5-1.7.5-4.5.5-4.5s0-2.8-.5-4.5zM9.7 15.3v-6l5.6 3-5.6 3z"/></svg>
+        </a>
+      </nav>
+    </header>
+
+    <main id="links" role="main" aria-label="Primary links">
+      <!-- FEATURED / TOP ACTION -->
+      <a class="link-card feature" href="#" target="_blank" rel="noopener" aria-label="Book a live talk (opens in a new tab)">
+        <div>
+          <div class="link-title">Book a Live Talk</div>
+          <div class="link-desc">Talks that fuse science, philosophy, and wonder for festivals, schools, and conferences.</div>
+        </div>
+        <div class="chev" aria-hidden="true">➡️</div>
+      </a>
+
+      <a class="link-card" href="#" target="_blank" rel="noopener">
+        <div>
+          <div class="link-title">Pure Scribble Podcast</div>
+          <div class="link-desc">Deep-dive conversations and ideas beyond the short-form clips.</div>
+        </div>
+        <div class="chev" aria-hidden="true">↗</div>
+      </a>
+
+      <a class="link-card" href="#" target="_blank" rel="noopener">
+        <div>
+          <div class="link-title">YouTube</div>
+          <div class="link-desc">Longer videos, experiments, and story-driven explainers.</div>
+        </div>
+        <div class="chev" aria-hidden="true">↗</div>
+      </a>
+
+      <a class="link-card" href="#" target="_blank" rel="noopener">
+        <div>
+          <div class="link-title">Instagram</div>
+          <div class="link-desc">Daily curiosities, behind-the-scenes, and reels.</div>
+        </div>
+        <div class="chev" aria-hidden="true">↗</div>
+      </a>
+
+      <a class="link-card" href="#" target="_blank" rel="noopener">
+        <div>
+          <div class="link-title">TikTok</div>
+          <div class="link-desc">Quick-hit mind benders and visual experiments.</div>
+        </div>
+        <div class="chev" aria-hidden="true">↗</div>
+      </a>
+
+      <a class="link-card" href="mailto:hello@scribblemouth.com" rel="noopener">
+        <div>
+          <div class="link-title">Email</div>
+          <div class="link-desc">Reach out for collaborations, talks, or questions.</div>
+        </div>
+        <div class="chev" aria-hidden="true">✉️</div>
+      </a>
+
+      <a class="link-card" href="#" target="_blank" rel="noopener">
+        <div>
+          <div class="link-title">Newsletter</div>
+          <div class="link-desc">Occasional letters on paradoxes, illusions, and wonder.</div>
+        </div>
+        <div class="chev" aria-hidden="true">↗</div>
+      </a>
+    </main>
+
+    <footer role="contentinfo">
+      <p>Built with accessibility in mind: keyboard friendly, high-contrast, and reduced-motion aware.</p>
+    </footer>
+  </div>
+
+  <script>
+    // --- Reduced motion: soften transitions if user prefers ---
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mq.matches) {
+      for (const el of document.querySelectorAll('*')) {
+        el.style.scrollBehavior = 'auto';
+      }
+    }
+
+    // --- Theme toggle (system / light / dark) ---
+    (function() {
+      const KEY = 'links.theme';
+      const btn = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      const saved = localStorage.getItem(KEY);
+      if (saved === 'light' || saved === 'dark') html.setAttribute('data-theme', saved);
+      const setLabel = () => {
+        const mode = html.getAttribute('data-theme');
+        if (mode === 'light') btn.textContent = '🌞 Light';
+        else if (mode === 'dark') btn.textContent = '🌙 Dark';
+        else btn.textContent = '🌓 System';
+        btn.setAttribute('aria-pressed', mode !== 'system');
+        btn.title = `Theme: ${btn.textContent}`;
+      };
+      setLabel();
+      btn.addEventListener('click', () => {
+        const curr = html.getAttribute('data-theme') || 'system';
+        const next = curr === 'system' ? 'light' : curr === 'light' ? 'dark' : 'system';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem(KEY, next);
+        setLabel();
+      });
+    })();
+
+    // Optional: copy page URL button example
+    // document.querySelector('.copy-btn')?.addEventListener('click', async () => {
+    //   await navigator.clipboard.writeText(location.href);
+    //   alert('Link copied!');
+    // });
+  </script>
+
+  <!-- Schema.org for better sharing/search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "ScribbleMouth",
+    "url": "https://scribblemouth.com/links",
+    "sameAs": [
+      "https://instagram.com/yourhandle",
+      "https://tiktok.com/@yourhandle",
+      "https://youtube.com/@yourhandle"
+    ],
+    "description": "Science × philosophy × wonder — links hub"
+  }
+  </script>
+</body>
+</html>
