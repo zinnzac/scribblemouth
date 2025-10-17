@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank you — ScribbleMouth</title>
+  <meta name="description" content="Your philosophy cards download is ready." />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    :root{
+      --bg1:#0f0f10;
+      --bg2:#1a1a1d;
+      --accent:#000;
+      --accentHover:#111;
+      --card:#ffffff;
+      --shadow: 0 20px 70px rgba(0,0,0,.35), 0 8px 20px rgba(0,0,0,.25);
+      --radius: 20px;
+      --radius-lg: 28px;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, #2b2b30 0%, transparent 60%),
+        radial-gradient(1000px 600px at 90% -10%, #1d1d22 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:#111;
+      display:flex; flex-direction:column;
+    }
+    .nav{max-width:1100px;margin:24px auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
+    .brand{color:#fff;font-weight:700;font-size:clamp(18px,2.4vw,28px);text-decoration:none;}
+    .home-btn{background:#000;color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;transition:background .2s ease;}
+    .home-btn:hover{background:#111;}
+
+    .wrap{flex:1;display:grid;place-items:center;padding:20px 16px 64px;}
+    .card{width:min(760px,92vw);background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;}
+
+    .hero{background:conic-gradient(from 200deg at 60% 40%,#f3f5ff 0%,#f7f8ff 20%,#eef2ff 40%,#ffffff 70%,#f6f7fb 100%);padding:clamp(28px,5.5vw,48px) clamp(22px,5.5vw,56px);}
+    h1{margin:.35em 0 .1em;font-size:clamp(28px,5.8vw,46px);line-height:1.06;color:#0b0b0c;}
+    .sub{color:#303030;font-size:clamp(15px,2.4vw,18px);line-height:1.5;max-width:52ch;}
+
+    .body{padding:28px clamp(22px,5.5vw,56px) 38px;}
+    input[type=email]{flex:1 1 300px;border-radius:12px;border:1px solid #ddd;padding:14px;font-size:16px;}
+    input[type=email]:focus{border-color:#c9c9c9;}
+
+    .cta{border:none;border-radius:14px;padding:14px 18px;font-weight:700;font-size:16px;background:var(--accent);color:#fff;cursor:not-allowed;opacity:.6;transition:opacity .2s ease,transform .06s ease,background .2s ease;}
+    .cta.enabled{cursor:pointer;opacity:1;}
+    .cta.enabled:hover{background:var(--accentHover);transform:translateY(-1px);}
+
+    .foot{text-align:center;color:#bdbdbd;font-size:13px;padding:18px 0 36px;}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="/">ScribbleMouth</a>
+    <a class="home-btn" href="/index.html">Home</a>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="hero">
+        <h1>Thank you for your purchase</h1>
+        <p class="sub">Enter your email to download your Philosophy Cards PDF.</p>
+      </div>
+
+      <div class="body">
+        <input type="email" id="email" placeholder="you@example.com" required>
+        <button id="download" class="cta" disabled>Download</button>
+        <!-- Honeypot field to block bots (intentionally hidden) -->
+        <input type="text" id="website" name="website" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true" tabindex="-1" autocomplete="off">
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">© <span id="y"></span> ScribbleMouth • For the incurably curious</footer>
+
+  <script>
+    const SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbwiQn5OJ7bQY_A_PyY8yBCjXV_mc7bMs3c80SdVCekWHGpyNzSiJXiQC8giSsEF8AV30g/exec"; // Google Apps Script Web App URL
+    const PDF_URL = '/philosophy-cards.pdf';
+
+    // ====== DOM ======
+    const email = document.getElementById('email');
+    const cta = document.getElementById('download');
+    const honeypotEl = document.getElementById('website');
+    const honeypot = honeypotEl ? honeypotEl : { value: '' };
+
+    // Simple email check
+    const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim());
+
+    function updateState() {
+      if(emailOk(email.value) && !honeypot.value) {
+        cta.disabled = false;
+        cta.classList.add('enabled');
+      } else {
+        cta.disabled = true;
+        cta.classList.remove('enabled');
+      }
+    }
+    email.addEventListener('input', updateState);
+
+    async function saveToSheet(addr){
+      if(!SHEET_WEBHOOK) return; // skip if not configured yet
+      try{
+        const payload = {
+          email: String(addr).trim(),
+          page: location.pathname,
+          ts: new Date().toISOString(),
+          ua: navigator.userAgent
+        };
+        await fetch(SHEET_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(err){
+        // ignore errors so download isn't blocked
+      }
+    }
+
+    cta.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if(cta.disabled) return;
+      cta.disabled = true;
+      await saveToSheet(email.value);
+      window.location.href = PDF_URL;
+    });
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+    updateState();
+  </script>
+</body>
+</html>
