@@ -119,13 +119,22 @@
       }
     }
 
-    cta.addEventListener('click', async (e) => {
-      e.preventDefault();
-      if(cta.disabled) return;
-      cta.disabled = true;
-      await saveToSheet(email.value);
-      window.location.href = PDF_URL;
-    });
+    cta.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (cta.disabled) return;
+  // send the email in the background, don't wait
+  saveToSheet(email.value);
+  setTimeout(() => {
+  const link = document.createElement('a');
+  link.href = PDF_URL;
+  link.download = 'Small Questions, Big Answers.pdf'; // the filename users will see
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}, 50);
+
+});
+
 
     document.getElementById('y').textContent = new Date().getFullYear();
     updateState();
